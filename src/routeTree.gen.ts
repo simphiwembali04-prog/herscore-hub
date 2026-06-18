@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as TrustRouteImport } from './routes/trust'
 import { Route as ScoresRouteImport } from './routes/scores'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as NewsRouteImport } from './routes/news'
@@ -16,6 +17,11 @@ import { Route as AthletesRouteImport } from './routes/athletes'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AthletesIdRouteImport } from './routes/athletes.$id'
 
+const TrustRoute = TrustRouteImport.update({
+  id: '/trust',
+  path: '/trust',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ScoresRoute = ScoresRouteImport.update({
   id: '/scores',
   path: '/scores',
@@ -53,6 +59,7 @@ export interface FileRoutesByFullPath {
   '/news': typeof NewsRoute
   '/profile': typeof ProfileRoute
   '/scores': typeof ScoresRoute
+  '/trust': typeof TrustRoute
   '/athletes/$id': typeof AthletesIdRoute
 }
 export interface FileRoutesByTo {
@@ -61,6 +68,7 @@ export interface FileRoutesByTo {
   '/news': typeof NewsRoute
   '/profile': typeof ProfileRoute
   '/scores': typeof ScoresRoute
+  '/trust': typeof TrustRoute
   '/athletes/$id': typeof AthletesIdRoute
 }
 export interface FileRoutesById {
@@ -70,6 +78,7 @@ export interface FileRoutesById {
   '/news': typeof NewsRoute
   '/profile': typeof ProfileRoute
   '/scores': typeof ScoresRoute
+  '/trust': typeof TrustRoute
   '/athletes/$id': typeof AthletesIdRoute
 }
 export interface FileRouteTypes {
@@ -80,9 +89,17 @@ export interface FileRouteTypes {
     | '/news'
     | '/profile'
     | '/scores'
+    | '/trust'
     | '/athletes/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/athletes' | '/news' | '/profile' | '/scores' | '/athletes/$id'
+  to:
+    | '/'
+    | '/athletes'
+    | '/news'
+    | '/profile'
+    | '/scores'
+    | '/trust'
+    | '/athletes/$id'
   id:
     | '__root__'
     | '/'
@@ -90,6 +107,7 @@ export interface FileRouteTypes {
     | '/news'
     | '/profile'
     | '/scores'
+    | '/trust'
     | '/athletes/$id'
   fileRoutesById: FileRoutesById
 }
@@ -99,10 +117,18 @@ export interface RootRouteChildren {
   NewsRoute: typeof NewsRoute
   ProfileRoute: typeof ProfileRoute
   ScoresRoute: typeof ScoresRoute
+  TrustRoute: typeof TrustRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/trust': {
+      id: '/trust'
+      path: '/trust'
+      fullPath: '/trust'
+      preLoaderRoute: typeof TrustRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/scores': {
       id: '/scores'
       path: '/scores'
@@ -166,17 +192,8 @@ const rootRouteChildren: RootRouteChildren = {
   NewsRoute: NewsRoute,
   ProfileRoute: ProfileRoute,
   ScoresRoute: ScoresRoute,
+  TrustRoute: TrustRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
