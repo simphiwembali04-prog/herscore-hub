@@ -2,13 +2,13 @@ import { Link, useRouterState } from "@tanstack/react-router";
 import { Home, Radio, Users, Newspaper, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 
-const items = [
+const items: { to: "/" | "/scores" | "/athletes" | "/news" | "/profile"; label: string; icon: typeof Home; exact?: boolean }[] = [
   { to: "/", label: "Home", icon: Home, exact: true },
   { to: "/scores", label: "Scores", icon: Radio },
   { to: "/athletes", label: "Athletes", icon: Users },
   { to: "/news", label: "News", icon: Newspaper },
   { to: "/profile", label: "Profile", icon: User },
-] as const;
+];
 
 export function BottomNav() {
   const pathname = useRouterState({ select: (s) => s.location.pathname });
