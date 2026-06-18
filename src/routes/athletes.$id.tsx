@@ -1,6 +1,6 @@
 import { createFileRoute, Link, notFound } from "@tanstack/react-router";
 import { ChevronLeft, Heart, Share2, Trophy, Sparkles } from "lucide-react";
-import { athletes, sportLabel } from "@/lib/mock-data";
+import { athletes, sportLabel, type Athlete } from "@/lib/mock-data";
 
 export const Route = createFileRoute("/athletes/$id")({
   head: ({ params }) => {
@@ -39,7 +39,7 @@ export const Route = createFileRoute("/athletes/$id")({
 });
 
 function AthletePage() {
-  const { athlete } = Route.useLoaderData();
+  const { athlete } = Route.useLoaderData() as { athlete: Athlete };
 
   return (
     <div className="pb-8">

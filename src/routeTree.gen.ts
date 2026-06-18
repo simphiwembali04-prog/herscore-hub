@@ -9,38 +9,128 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as ScoresRouteImport } from './routes/scores'
+import { Route as ProfileRouteImport } from './routes/profile'
+import { Route as NewsRouteImport } from './routes/news'
+import { Route as AthletesRouteImport } from './routes/athletes'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AthletesIdRouteImport } from './routes/athletes.$id'
 
+const ScoresRoute = ScoresRouteImport.update({
+  id: '/scores',
+  path: '/scores',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ProfileRoute = ProfileRouteImport.update({
+  id: '/profile',
+  path: '/profile',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const NewsRoute = NewsRouteImport.update({
+  id: '/news',
+  path: '/news',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AthletesRoute = AthletesRouteImport.update({
+  id: '/athletes',
+  path: '/athletes',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AthletesIdRoute = AthletesIdRouteImport.update({
+  id: '/$id',
+  path: '/$id',
+  getParentRoute: () => AthletesRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/athletes': typeof AthletesRouteWithChildren
+  '/news': typeof NewsRoute
+  '/profile': typeof ProfileRoute
+  '/scores': typeof ScoresRoute
+  '/athletes/$id': typeof AthletesIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/athletes': typeof AthletesRouteWithChildren
+  '/news': typeof NewsRoute
+  '/profile': typeof ProfileRoute
+  '/scores': typeof ScoresRoute
+  '/athletes/$id': typeof AthletesIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/athletes': typeof AthletesRouteWithChildren
+  '/news': typeof NewsRoute
+  '/profile': typeof ProfileRoute
+  '/scores': typeof ScoresRoute
+  '/athletes/$id': typeof AthletesIdRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/athletes'
+    | '/news'
+    | '/profile'
+    | '/scores'
+    | '/athletes/$id'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/athletes' | '/news' | '/profile' | '/scores' | '/athletes/$id'
+  id:
+    | '__root__'
+    | '/'
+    | '/athletes'
+    | '/news'
+    | '/profile'
+    | '/scores'
+    | '/athletes/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AthletesRoute: typeof AthletesRouteWithChildren
+  NewsRoute: typeof NewsRoute
+  ProfileRoute: typeof ProfileRoute
+  ScoresRoute: typeof ScoresRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/scores': {
+      id: '/scores'
+      path: '/scores'
+      fullPath: '/scores'
+      preLoaderRoute: typeof ScoresRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/profile': {
+      id: '/profile'
+      path: '/profile'
+      fullPath: '/profile'
+      preLoaderRoute: typeof ProfileRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/news': {
+      id: '/news'
+      path: '/news'
+      fullPath: '/news'
+      preLoaderRoute: typeof NewsRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/athletes': {
+      id: '/athletes'
+      path: '/athletes'
+      fullPath: '/athletes'
+      preLoaderRoute: typeof AthletesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -48,11 +138,34 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/athletes/$id': {
+      id: '/athletes/$id'
+      path: '/$id'
+      fullPath: '/athletes/$id'
+      preLoaderRoute: typeof AthletesIdRouteImport
+      parentRoute: typeof AthletesRoute
+    }
   }
 }
 
+interface AthletesRouteChildren {
+  AthletesIdRoute: typeof AthletesIdRoute
+}
+
+const AthletesRouteChildren: AthletesRouteChildren = {
+  AthletesIdRoute: AthletesIdRoute,
+}
+
+const AthletesRouteWithChildren = AthletesRoute._addFileChildren(
+  AthletesRouteChildren,
+)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AthletesRoute: AthletesRouteWithChildren,
+  NewsRoute: NewsRoute,
+  ProfileRoute: ProfileRoute,
+  ScoresRoute: ScoresRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
