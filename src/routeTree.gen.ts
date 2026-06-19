@@ -16,6 +16,7 @@ import { Route as NewsRouteImport } from './routes/news'
 import { Route as AthletesRouteImport } from './routes/athletes'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AthletesIdRouteImport } from './routes/athletes.$id'
+import { Route as ApiChatRouteImport } from './routes/api/chat'
 
 const TrustRoute = TrustRouteImport.update({
   id: '/trust',
@@ -52,6 +53,11 @@ const AthletesIdRoute = AthletesIdRouteImport.update({
   path: '/$id',
   getParentRoute: () => AthletesRoute,
 } as any)
+const ApiChatRoute = ApiChatRouteImport.update({
+  id: '/api/chat',
+  path: '/api/chat',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -60,6 +66,7 @@ export interface FileRoutesByFullPath {
   '/profile': typeof ProfileRoute
   '/scores': typeof ScoresRoute
   '/trust': typeof TrustRoute
+  '/api/chat': typeof ApiChatRoute
   '/athletes/$id': typeof AthletesIdRoute
 }
 export interface FileRoutesByTo {
@@ -69,6 +76,7 @@ export interface FileRoutesByTo {
   '/profile': typeof ProfileRoute
   '/scores': typeof ScoresRoute
   '/trust': typeof TrustRoute
+  '/api/chat': typeof ApiChatRoute
   '/athletes/$id': typeof AthletesIdRoute
 }
 export interface FileRoutesById {
@@ -79,6 +87,7 @@ export interface FileRoutesById {
   '/profile': typeof ProfileRoute
   '/scores': typeof ScoresRoute
   '/trust': typeof TrustRoute
+  '/api/chat': typeof ApiChatRoute
   '/athletes/$id': typeof AthletesIdRoute
 }
 export interface FileRouteTypes {
@@ -90,6 +99,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/scores'
     | '/trust'
+    | '/api/chat'
     | '/athletes/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -99,6 +109,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/scores'
     | '/trust'
+    | '/api/chat'
     | '/athletes/$id'
   id:
     | '__root__'
@@ -108,6 +119,7 @@ export interface FileRouteTypes {
     | '/profile'
     | '/scores'
     | '/trust'
+    | '/api/chat'
     | '/athletes/$id'
   fileRoutesById: FileRoutesById
 }
@@ -118,6 +130,7 @@ export interface RootRouteChildren {
   ProfileRoute: typeof ProfileRoute
   ScoresRoute: typeof ScoresRoute
   TrustRoute: typeof TrustRoute
+  ApiChatRoute: typeof ApiChatRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -171,6 +184,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AthletesIdRouteImport
       parentRoute: typeof AthletesRoute
     }
+    '/api/chat': {
+      id: '/api/chat'
+      path: '/api/chat'
+      fullPath: '/api/chat'
+      preLoaderRoute: typeof ApiChatRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
@@ -193,6 +213,7 @@ const rootRouteChildren: RootRouteChildren = {
   ProfileRoute: ProfileRoute,
   ScoresRoute: ScoresRoute,
   TrustRoute: TrustRoute,
+  ApiChatRoute: ApiChatRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
