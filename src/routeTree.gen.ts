@@ -14,9 +14,13 @@ import { Route as ScoresRouteImport } from './routes/scores'
 import { Route as ProfileRouteImport } from './routes/profile'
 import { Route as NewsRouteImport } from './routes/news'
 import { Route as AthletesRouteImport } from './routes/athletes'
+import { Route as AiRouteImport } from './routes/ai'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AthletesIdRouteImport } from './routes/athletes.$id'
 import { Route as ApiChatRouteImport } from './routes/api/chat'
+import { Route as AiResearchRouteImport } from './routes/ai.research'
+import { Route as AiEmailRouteImport } from './routes/ai.email'
+import { Route as AiChatRouteImport } from './routes/ai.chat'
 
 const TrustRoute = TrustRouteImport.update({
   id: '/trust',
@@ -43,6 +47,11 @@ const AthletesRoute = AthletesRouteImport.update({
   path: '/athletes',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AiRoute = AiRouteImport.update({
+  id: '/ai',
+  path: '/ai',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -58,35 +67,62 @@ const ApiChatRoute = ApiChatRouteImport.update({
   path: '/api/chat',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AiResearchRoute = AiResearchRouteImport.update({
+  id: '/research',
+  path: '/research',
+  getParentRoute: () => AiRoute,
+} as any)
+const AiEmailRoute = AiEmailRouteImport.update({
+  id: '/email',
+  path: '/email',
+  getParentRoute: () => AiRoute,
+} as any)
+const AiChatRoute = AiChatRouteImport.update({
+  id: '/chat',
+  path: '/chat',
+  getParentRoute: () => AiRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/ai': typeof AiRouteWithChildren
   '/athletes': typeof AthletesRouteWithChildren
   '/news': typeof NewsRoute
   '/profile': typeof ProfileRoute
   '/scores': typeof ScoresRoute
   '/trust': typeof TrustRoute
+  '/ai/chat': typeof AiChatRoute
+  '/ai/email': typeof AiEmailRoute
+  '/ai/research': typeof AiResearchRoute
   '/api/chat': typeof ApiChatRoute
   '/athletes/$id': typeof AthletesIdRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/ai': typeof AiRouteWithChildren
   '/athletes': typeof AthletesRouteWithChildren
   '/news': typeof NewsRoute
   '/profile': typeof ProfileRoute
   '/scores': typeof ScoresRoute
   '/trust': typeof TrustRoute
+  '/ai/chat': typeof AiChatRoute
+  '/ai/email': typeof AiEmailRoute
+  '/ai/research': typeof AiResearchRoute
   '/api/chat': typeof ApiChatRoute
   '/athletes/$id': typeof AthletesIdRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/ai': typeof AiRouteWithChildren
   '/athletes': typeof AthletesRouteWithChildren
   '/news': typeof NewsRoute
   '/profile': typeof ProfileRoute
   '/scores': typeof ScoresRoute
   '/trust': typeof TrustRoute
+  '/ai/chat': typeof AiChatRoute
+  '/ai/email': typeof AiEmailRoute
+  '/ai/research': typeof AiResearchRoute
   '/api/chat': typeof ApiChatRoute
   '/athletes/$id': typeof AthletesIdRoute
 }
@@ -94,37 +130,50 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/ai'
     | '/athletes'
     | '/news'
     | '/profile'
     | '/scores'
     | '/trust'
+    | '/ai/chat'
+    | '/ai/email'
+    | '/ai/research'
     | '/api/chat'
     | '/athletes/$id'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/ai'
     | '/athletes'
     | '/news'
     | '/profile'
     | '/scores'
     | '/trust'
+    | '/ai/chat'
+    | '/ai/email'
+    | '/ai/research'
     | '/api/chat'
     | '/athletes/$id'
   id:
     | '__root__'
     | '/'
+    | '/ai'
     | '/athletes'
     | '/news'
     | '/profile'
     | '/scores'
     | '/trust'
+    | '/ai/chat'
+    | '/ai/email'
+    | '/ai/research'
     | '/api/chat'
     | '/athletes/$id'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AiRoute: typeof AiRouteWithChildren
   AthletesRoute: typeof AthletesRouteWithChildren
   NewsRoute: typeof NewsRoute
   ProfileRoute: typeof ProfileRoute
@@ -170,6 +219,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AthletesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ai': {
+      id: '/ai'
+      path: '/ai'
+      fullPath: '/ai'
+      preLoaderRoute: typeof AiRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/': {
       id: '/'
       path: '/'
@@ -191,8 +247,43 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof ApiChatRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ai/research': {
+      id: '/ai/research'
+      path: '/research'
+      fullPath: '/ai/research'
+      preLoaderRoute: typeof AiResearchRouteImport
+      parentRoute: typeof AiRoute
+    }
+    '/ai/email': {
+      id: '/ai/email'
+      path: '/email'
+      fullPath: '/ai/email'
+      preLoaderRoute: typeof AiEmailRouteImport
+      parentRoute: typeof AiRoute
+    }
+    '/ai/chat': {
+      id: '/ai/chat'
+      path: '/chat'
+      fullPath: '/ai/chat'
+      preLoaderRoute: typeof AiChatRouteImport
+      parentRoute: typeof AiRoute
+    }
   }
 }
+
+interface AiRouteChildren {
+  AiChatRoute: typeof AiChatRoute
+  AiEmailRoute: typeof AiEmailRoute
+  AiResearchRoute: typeof AiResearchRoute
+}
+
+const AiRouteChildren: AiRouteChildren = {
+  AiChatRoute: AiChatRoute,
+  AiEmailRoute: AiEmailRoute,
+  AiResearchRoute: AiResearchRoute,
+}
+
+const AiRouteWithChildren = AiRoute._addFileChildren(AiRouteChildren)
 
 interface AthletesRouteChildren {
   AthletesIdRoute: typeof AthletesIdRoute
@@ -208,6 +299,7 @@ const AthletesRouteWithChildren = AthletesRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AiRoute: AiRouteWithChildren,
   AthletesRoute: AthletesRouteWithChildren,
   NewsRoute: NewsRoute,
   ProfileRoute: ProfileRoute,
